@@ -17,7 +17,7 @@ namespace :resque do
   end
   
   def rack_env
-    fetch(:resque_rack_env, fetch(:rack_env, fetch(:stage, "production")
+    fetch(:resque_rack_env, fetch(:rack_env, fetch(:stage, "production")))
   end
 
   def output_redirection
