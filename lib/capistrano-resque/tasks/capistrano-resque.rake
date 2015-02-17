@@ -15,6 +15,10 @@ namespace :resque do
       fetch(:rails_env) ||       # capistrano-rails doesn't automatically set this (yet),
       fetch(:stage)              # so we need to fall back to the stage.
   end
+  
+  def rack_env
+    fetch(:resque_rack_env, fetch(:rack_env, fetch(:stage, "production")
+  end
 
   def output_redirection
     ">> #{fetch(:resque_log_file)} 2>> #{fetch(:resque_log_file)}"
@@ -128,7 +132,7 @@ namespace :resque do
         create_pid_path
         pid = "#{fetch(:resque_pid_path)}/scheduler.pid"
         within current_path do
-          execute :rake, %{RAILS_ENV=#{rails_env} PIDFILE=#{pid} BACKGROUND=yes VERBOSE=1 MUTE=1 #{"environment" if fetch(:resque_environment_task)} resque:scheduler #{output_redirection}}
+          execute :rake, %{RAILS_ENV=#{rails_env} RACK_ENV=#{rack_env} PIDFILE=#{pid} BACKGROUND=yes VERBOSE=1 MUTE=1 #{"environment" if fetch(:resque_environment_task)} resque:scheduler #{output_redirection}}
         end
       end
     end
