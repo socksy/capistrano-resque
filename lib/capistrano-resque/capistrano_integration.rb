@@ -16,6 +16,10 @@ module CapistranoResque
         def rails_env
           fetch(:resque_rails_env, fetch(:rails_env, "production"))
         end
+        
+        def rack_env
+          fetch(:resque_rack_env, fetch(:rack_env, "production"))
+        end
 
         def output_redirection
           ">> #{fetch(:resque_log_file)} 2>> #{fetch(:resque_log_file)}"
@@ -44,7 +48,7 @@ module CapistranoResque
         end
 
         def start_command(queue, pid)
-          "cd #{current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
+          "cd #{current_path} && RAILS_ENV=#{rails_env} RACK_ENV=\"#{rack_env}\" QUEUE=\"#{queue}\" \
            PIDFILE=#{pid} BACKGROUND=yes VERBOSE=1 INTERVAL=#{interval} \
            #{fetch(:bundle_cmd, "bundle")} exec rake \
            #{"environment" if fetch(:resque_environment_task)} \
